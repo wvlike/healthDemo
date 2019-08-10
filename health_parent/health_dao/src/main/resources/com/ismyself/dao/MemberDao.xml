@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ismyself.dao.MemberDao">
+
+
+    <!--findMemberByTel-->
+    <select id="findMemberByTel" parameterType="String" resultType="Member">
+        select * from t_member where phoneNumber = #{telephone}
+    </select>
+
+
+    <!--saveMember-->
+    <insert id="saveMember" parameterType="Member" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into t_member (fileNumber, name, sex, idCard, phoneNumber, regTime, password, email, birthday, remark)
+        values (#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},#{regTime},#{password},#{email},#{birthday},#{remark})
+    </insert>
+
+    <!--findMemberCountByMap-->
+    <select id="findMemberCountByMap" parameterType="map" resultType="int">
+        select count(id) from t_member where regTime between #{frist} and #{last}
+    </select>
+
+    <!--findTodayMemberNum-->
+    <select id="findTodayMemberNum" parameterType="String" resultType="int">
+        select count(id) from t_member where regTime = #{value}
+    </select>
+
+    <!--findTotalMember-->
+    <select id="findTotalMember" resultType="int">
+        select count(id) from t_member
+    </select>
+
+    <!--findThisWeekNewMember-->
+    <select id="findThisWeekNewMember" parameterType="String" resultType="int">
+        <![CDATA[
+
+                      select count(id) from t_member where regTime >= #{value}
+
+        ]]>
+    </select>
+
+    <!--findThisMonthNewMember-->
+    <select id="findThisMonthNewMember" parameterType="String" resultType="int">
+      <![CDATA[
+
+                      select count(id) from t_member where regTime >= #{value}
+
+        ]]>
+    </select>
+
+
+
+
+</mapper>

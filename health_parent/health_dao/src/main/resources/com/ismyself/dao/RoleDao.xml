@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ismyself.dao.RoleDao">
+    <!--findByUid-->
+    <select id="findByUid" parameterType="int" resultType="Role">
+        select * from t_user_role ur,t_role r where ur.role_id = r.id and ur.user_id = #{id}
+    </select>
+    <!--    Page<Role> findByQueryString(String queryString);-->
+    <select id="findByQueryString" parameterType="String" resultType="Role">
+        select * from t_role where 1 = 1
+        <if test="value != null and value.length > 0">
+            and name like '%${value}%' or keyword like '%${value}%'
+        </if>
+    </select>
+
+    <!--    void save(Role role);-->
+    <insert id="save" parameterType="Role" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into t_role (name, keyword, description) values (#{name},#{keyword},#{description})
+    </insert>
+
+    <!--    void setRoleAndPermission(Integer roleId, Integer pId);-->
+    <insert id="setRoleAndPermission" parameterType="map">
+        insert into t_role_permission (role_id, permission_id) VALUES (#{roleId},#{permissionId})
+    </insert>
+
+    <!--    void setRoleAndMenu(Integer roleId, Integer mId);-->
+    <insert id="setRoleAndMenu" parameterType="map">
+        insert into t_role_menu (role_id, menu_id) VALUES (#{roleId},#{menuId})
+    </insert>
+    <!--    void deleteRoleAndMenuById(Integer id);-->
+    <delete id="deleteRoleAndMenuById" parameterType="int">
+        delete from t_role_menu where role_id = #{id}
+    </delete>
+
+    <!--    void deleteRoleAndPermissionById(Integer id);-->
+    <delete id="deleteRoleAndPermissionById" parameterType="int">
+        delete from t_role_permission where role_id = #{id}
+    </delete>
+    <!--    void deleteById(Integer id);-->
+    <delete id="deleteById" parameterType="int">
+        delete from t_role where id = #{id}
+    </delete>
+    <!--    Role findById(Integer id);-->
+    <select id="findById" parameterType="int" resultType="Role">
+        select * from t_role where id = #{id}
+    </select>
+
+    <!--    update-->
+    <update id="update" parameterType="Permission">
+        update t_role
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="keyword != null">
+                keyword = #{keyword},
+            </if>
+            <if test="description != null">
+                description = #{description}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+</mapper>

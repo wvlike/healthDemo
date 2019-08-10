@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ismyself.dao.CheckgroupDao">
+
+    <!--findCheckItemList-->
+    <select id="findCheckItemList" resultType="CheckItem">
+        select * from t_checkitem
+    </select>
+    <!--save-->
+    <insert id="save" parameterType="CheckGroup" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into t_checkgroup (code, name, helpCode, sex, remark, attention) values (#{code},#{name},#{helpCode},#{sex},#{remark},#{attention})
+    </insert>
+
+    <!--setCheckItemAndCheckGroup-->
+    <insert id="setCheckItemAndCheckGroup" parameterType="map">
+        insert into t_checkgroup_checkitem (checkgroup_id, checkitem_id) values (#{checkGroupId},#{checkItemId})
+    </insert>
+
+    <!--findList-->
+    <select id="findList" parameterType="String" resultType="CheckGroup">
+        select * from t_checkgroup where 1 = 1
+        <if test="value != null and value.length > 0">
+            and code = #{value} or name like '%${value}%' or helpCode = #{value}
+        </if>
+    </select>
+
+    <!--deleteItemAndGroupById-->
+    <delete id="deleteItemAndGroupById" parameterType="int">
+        delete from t_checkgroup_checkitem where checkgroup_id = #{groupId}
+    </delete>
+
+    <!--deleteById-->
+    <delete id="deleteById" parameterType="int">
+        delete from t_checkgroup where id = #{id}
+    </delete>
+
+    <!--findById-->
+    <select id="findById" parameterType="int" resultType="CheckGroup">
+        select * from t_checkgroup where id = #{id}
+    </select>
+
+    <!--findItemIdsById-->
+    <select id="findItemIdsById" parameterType="int" resultType="int">
+        select checkitem_id from t_checkgroup_checkitem where checkgroup_id = #{id}
+    </select>
+
+    <!--updateGroup-->
+    <!--code, name, helpCode, sex, remark, attention-->
+    <update id="updateGroup" parameterType="CheckGroup">
+        update t_checkgroup
+        <set>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="helpCode != null">
+                helpCode = #{helpCode},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="attention != null">
+                attention = #{attention}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <!--findLastCheckGroup-->
+    <select id="findGroupBySetmealId" parameterType="int" resultMap="GroupBySetmealMap">
+        select * from t_checkgroup where id in (select checkgroup_id from t_setmeal_checkgroup where setmeal_id = #{id})
+    </select>
+    <resultMap id="baseGroupBySetmealMap" type="CheckGroup">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="helpCode" column="helpCode"/>
+        <result property="sex" column="sex"/>
+        <result property="remark" column="remark"/>
+        <result property="attention" column="attention"/>
+    </resultMap>
+    <resultMap id="GroupBySetmealMap" type="CheckGroup" extends="baseGroupBySetmealMap">
+        <collection property="checkItems" javaType="list" ofType="CheckItem" column="id"
+                    select="com.ismyself.dao.CheckItemDao.findItemByGroupId"/>
+    </resultMap>
+
+
+
+
+
+    <!--&lt;!&ndash;findLastCheckGroup&ndash;&gt;
+    <select id="findGroupBySetmealId" parameterType="int" resultMap="GroupBySetmealMap">
+        select * from t_checkgroup where id in (select checkgroup_id from t_setmeal_checkgroup where setmeal_id = #{id})
+    </select>
+    <resultMap id="GroupBySetmealMap" type="CheckGroup">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="helpCode" column="helpCode"/>
+        <result property="sex" column="sex"/>
+        <result property="remark" column="remark"/>
+        <result property="attention" column="attention"/>
+        <collection property="checkItems" javaType="list" ofType="CheckItem" column="id" select="com.ismyself.dao.CheckItemDao.findItemByGroupId"/>
+    </resultMap>-->
+
+</mapper>

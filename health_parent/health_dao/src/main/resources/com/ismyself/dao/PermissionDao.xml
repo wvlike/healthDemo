@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ismyself.dao.PermissionDao">
+    <!--findByRoleId-->
+    <select id="findByRoleId" parameterType="int" resultType="Permission">
+        select * from t_role_permission rp,t_permission p where rp.permission_id = p.id and rp.role_id = #{id}
+    </select>
+
+    <!--    Page<Permission> findByQueryString(String queryString);    -->
+    <select id="findByQueryString" parameterType="String" resultType="Permission">
+        select * from t_permission where 1 = 1
+        <if test="value != null and value.length > 0">
+            and name like '%${value}%' or keyword like '%${value}%'
+        </if>
+    </select>
+
+    <!--    void save(Permission permission);-->
+    <insert id="save" parameterType="Permission">
+        insert into t_permission (name, keyword, description) values (#{name},#{keyword},#{description})
+    </insert>
+
+    <!--findRAPCountById-->
+    <select id="findRAPCountById" parameterType="int" resultType="int">
+        select count(id) from t_role_permission where permission_id = #{id}
+    </select>
+
+
+    <!--    void deleteById(Integer id);-->
+    <delete id="deleteById" parameterType="int">
+        delete from t_permission where id = #{id}
+    </delete>
+
+    <!--    Permission findById(Integer id);-->
+    <select id="findById" parameterType="int" resultType="Permission">
+        select * from t_permission where id = #{id}
+    </select>
+
+    <!--    void update(Permission permission);-->
+    <update id="update" parameterType="Permission">
+        update t_permission
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="keyword != null">
+                keyword = #{keyword},
+            </if>
+            <if test="description != null">
+                description = #{description}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+
+    <!--findAllList-->
+    <select id="findAllList" resultType="Permission">
+        select * from t_permission
+    </select>
+
+    <!--findPermissionsByRid-->
+    <select id="findPermissionsByRid" parameterType="int" resultType="Permission">
+        select * from t_permission where id in (select permission_id from t_role_permission where role_id = #{id})
+    </select>
+
+    <!--findIdsByRoleId-->
+    <select id="findIdsByRoleId" parameterType="int" resultType="int">
+        select permission_id from t_role_permission where role_id = #{id}
+    </select>
+</mapper>

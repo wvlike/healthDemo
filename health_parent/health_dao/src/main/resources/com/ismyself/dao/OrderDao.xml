@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ismyself.dao.OrderDao">
+
+    <!--findByCondition-->
+    <select id="findByCondition" parameterType="Order" resultType="Order">
+        select * from t_order
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="memberId != null">
+                and member_id = #{memberId}
+            </if>
+            <if test="orderDate != null">
+                and orderDate = #{orderDate}
+            </if>
+            <if test="orderType != null">
+                and orderType = #{orderType}
+            </if>
+            <if test="orderStatus != null">
+                and orderStatus = #{orderStatus}
+            </if>
+            <if test="setmealId != null">
+                and setmeal_id = #{setmealId}
+            </if>
+        </where>
+    </select>
+
+    <!--saveOrder-->
+    <insert id="saveOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into t_order (member_id, orderDate, orderType, orderStatus, setmeal_id) values
+        (#{memberId},#{orderDate},#{orderType},#{orderStatus},#{setmealId})
+    </insert>
+
+
+    <!--   <p>体检人：{{orderInfo.member}}</p>
+    <p>体检套餐：{{orderInfo.setmeal}}</p>
+    <p>体检日期：{{orderInfo.orderDate}}</p>
+    <p>预约类型：{{orderInfo.orderType}}</p>-->
+    <!--findMessageById-->
+    <select id="findMessageById" parameterType="int" resultType="map">
+        select m.name member ,s.name setmeal ,o.orderDate orderDate ,o.orderType orderType from t_member m, t_order o,t_setmeal s
+        where m.id = o.member_id and o.setmeal_id = s.id and o.id = #{id}
+    </select>
+
+    <!--findTodayOrderNumber-->
+    <select id="findTodayOrderNumber" parameterType="String" resultType="int">
+        select count(id) from t_order where orderDate = #{value}
+    </select>
+
+    <!--findTodayVisitsNumber-->
+    <select id="findTodayVisitsNumber" parameterType="String" resultType="int">
+        select count(id) from t_order where orderDate = #{value} and orderStatus = '已到诊'
+    </select>
+
+    <!--findOrderCountAfterDate-->
+    <select id="findOrderCountAfterDate" parameterType="String" resultType="int">
+         <![CDATA[
+
+                      select count(id) from t_order where orderDate >= #{value}
+
+        ]]>
+    </select>
+    <!--findVisitsCountAfterDate-->
+    <select id="findVisitsCountAfterDate" parameterType="String" resultType="int">
+         <![CDATA[
+
+                      select count(id) from t_order where orderDate >= #{value} and orderStatus = '已到诊'
+
+        ]]>
+    </select>
+
+    <!--findHotOrderSetmeal-->
+    <select id="findHotOrderSetmeal" resultType="map">
+        SELECT s.name, COUNT(o.setmeal_id) AS setmeal_count
+            , COUNT(o.setmeal_id) / (
+                SELECT COUNT(id)
+                FROM t_order
+            ) AS proportion
+            ,s.remark
+        FROM t_order o
+            LEFT JOIN t_setmeal s ON s.id = o.setmeal_id
+        GROUP BY o.setmeal_id
+        ORDER BY COUNT(o.setmeal_id) DESC
+        LIMIT 0, 4
+    </select>
+
+
+</mapper>
