@@ -245,7 +245,9 @@
                 location.href = '/logout.do'
             },
             showMenu(){
-                axios.get('')
+                axios.get('/user/getUsername.do').then(res=>{
+
+                })
 
             }
         }
