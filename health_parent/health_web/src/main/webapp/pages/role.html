@@ -443,8 +443,8 @@
                             });
                             if (res.data.flag) {
                                 this.menuData = res.data.data;
-                                axios.get("/menu/findIdsByRoleId.do?rId="+row.id).then(res=>{
-                                    if (res.data.flag){
+                                axios.get("/menu/findIdsByRoleId.do?rId=" + row.id).then(res => {
+                                    if (res.data.flag) {
                                         this.menuIds = res.data.data
                                     }
                                 })
@@ -459,8 +459,8 @@
                             });
                             if (res.data.flag) {
                                 this.permissionData = res.data.data;
-                                axios.get("/permission/findIdsByRoleId.do?rId="+row.id).then(res=>{
-                                    if (res.data.flag){
+                                axios.get("/permission/findIdsByRoleId.do?rId=" + row.id).then(res => {
+                                    if (res.data.flag) {
                                         this.permissionIds = res.data.data
                                     }
                                 })
