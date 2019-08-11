@@ -8,8 +8,6 @@ import com.ismyself.dao.PermissionDao;
 import com.ismyself.dao.RoleDao;
 import com.ismyself.entity.PageResult;
 import com.ismyself.entity.QueryPageBean;
-import com.ismyself.pojo.Menu;
-import com.ismyself.pojo.Permission;
 import com.ismyself.pojo.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
