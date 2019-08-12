@@ -37,6 +37,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<Integer> findMemberCountByMonth(List<String> list) {
         List<Integer> memberCount = new ArrayList<>();
+        Integer num = 0;
         for (String timeStr : list) {
             Map<String, String> map = new HashMap<>();
             String fristDate = timeStr + ".1";
@@ -44,7 +45,8 @@ public class MemberServiceImpl implements MemberService {
             map.put("frist", fristDate);
             map.put("last", lastDate);
             Integer count = memberDao.findMemberCountByMap(map);
-            memberCount.add(count);
+            num = count + num;
+            memberCount.add(num);
         }
         return memberCount;
     }
