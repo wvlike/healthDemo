@@ -23,4 +23,6 @@ public interface RoleService {
     Role findById(Integer id);
 
     void update(Role role, List<Integer> pIds, List<Integer> mIds);
+
+    List<Role> findAllRole();
 }

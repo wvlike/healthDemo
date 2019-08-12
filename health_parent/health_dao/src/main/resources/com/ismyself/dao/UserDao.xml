@@ -10,4 +10,78 @@
     </select>
 
 
+    <!--用户信息分页查询-->
+    <select id="selectByCondition" parameterType="string" resultType="User">
+        select * from t_user
+        <if test="value!=null and value.length>0">
+            WHERE username=#{value}
+        </if>
+    </select>
+
+    <!--新增套餐-->
+    <insert id="addUser" parameterType="User">
+        /*获取id order:AFTER插入检查组后查询主键id值 keyProperty将查询后的id值设置到此对象属性中 返回到serviceImpl用 */
+        <selectKey keyProperty="id" resultType="integer" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO t_user (birthday,gender,username,password,remark,station,telephone)
+        values
+        (#{birthday},#{gender},#{username},#{password},#{remark},#{station},#{telephone})
+    </insert>
+
+    <!--通过套餐ID往中间表添加数据-->
+    <insert id="setUserAndRole" parameterType="map">
+        insert into t_user_role (user_id,role_id)
+        values(#{user_id},#{role_id})
+    </insert>
+
+    <!--根据用户ID删除用户角色中间表数据-->
+    <delete id="deleteUserAndRoleByUid" parameterType="integer">
+        DELETE FROM t_user_role WHERE user_id = #{userId}
+    </delete>
+
+    <!--根据ID删除用户-->
+    <delete id="deleteUserById" parameterType="integer">
+        DELETE FROM t_user WHERE id = #{userId}
+    </delete>
+
+    <!--根据id 查询检查组-->
+    <select id="findUserById" parameterType="integer" resultType="User">
+        SELECT * FROM t_user WHERE id = #{id}
+    </select>
+
+    <!-- 根据检查组ID查询关联表中所有检查项的ID-->
+    <select id="findRoleIdsByUserId" parameterType="integer" resultType="integer">
+        SELECT role_id FROM t_user_role WHERE user_id = #{id}
+    </select>
+
+    <!--根据 id 修改用户的信息 防止空值使用动态sql-->
+    <update id="editUser" parameterType="User">
+        UPDATE t_user
+        <set>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="gender != null">
+                gender = #{gender},
+            </if>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="station != null">
+                station = #{station},
+            </if>
+            <if test="telephone != null">
+                telephone = #{telephone},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
 </mapper>

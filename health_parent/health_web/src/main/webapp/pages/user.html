@@ -12,6 +12,31 @@
     <link rel="stylesheet" href="../plugins/elementui/index.css">
     <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .datatable {
+            position: relative;
+            box-sizing: border-box;
+            -webkit-box-flex: 1;
+            width: 100%;
+            max-width: 100%;
+            font-size: 14px;
+            color: rgb(96, 98, 102);
+            overflow: hidden;
+            flex: 1 1 0%;
+        }
+
+        .datatable td, .datatable th {
+            padding: 12px 0;
+            min-width: 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+            position: relative;
+            text-align: left;
+        }
+    </style>
+
 </head>
 <body class="hold-transition">
 <div id="app">
@@ -25,22 +50,26 @@
             <el-breadcrumb-item>用户管理</el-breadcrumb-item>
         </el-breadcrumb>
     </div>
+
     <div class="app-container">
         <div class="box">
+            <!--查询新建栏-->
             <div class="filter-container">
                 <el-input placeholder="用户名称" v-model="pagination.queryString" style="width: 200px;"
                           class="filter-item"></el-input>
                 <el-button @click="findPageByString()" class="dalfBut">查询</el-button>
                 <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
             </div>
-
-
+            <!--用户信息展示列表-->
             <el-table size="small" current-row-key="id" :data="dataList" stripe highlight-current-row>
                 <el-table-column type="index" align="center" label="序号"></el-table-column>
                 <el-table-column prop="username" label="用户名" align="center"></el-table-column>
-                <el-table-column prop="password" label="密码" align="center"></el-table-column>
                 <el-table-column prop="birthday" label="生日" align="center"></el-table-column>
-                <el-table-column prop="gender" label="性别" align="center"></el-table-column>
+                <el-table-column label="性别" align="center">
+                    <template slot-scope="scope">
+                        <span>{{ scope.row.gender == '0' ? '不限' : scope.row.gender == '1' ? '男' : '女'}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="telephone" label="联系电话" align="center"></el-table-column>
                 <el-table-column prop="station" label="状态" align="center"></el-table-column>
                 <el-table-column prop="remark" label="备注" align="center"></el-table-column>
@@ -51,8 +80,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-
-
+            <!--分页插件-->
             <div class="pagination-container">
                 <el-pagination
                         class="pagiantion"
@@ -69,62 +97,92 @@
                 <el-dialog title="新增菜单" :visible.sync="dialogFormVisible">
                     <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right"
                              label-width="100px">
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="用户名" prop="username">
-                                    <el-input v-model="formData.username"/>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="密码" prop="password">
-                                    <el-input v-model="formData.password"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="生日" prop="gender">
-                                    <div class="block">
-                                        <span class="demonstration"></span>
-                                        <el-date-picker
-                                                v-model="formData.birthday"
-                                                type="date"
-                                                placeholder="选择日期时间">
-                                        </el-date-picker>
+                        <template>
+                            <el-tabs v-model="activeName" type="card">
+                                <el-tab-pane label="基本信息" name="first">
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="用户名" prop="username">
+                                                <el-input v-model="formData.username"/>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item label="密码" prop="password">
+                                                <el-input v-model="formData.password"/>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="生日" prop="gender">
+                                                <div class="block">
+                                                    <span class="demonstration"></span>
+                                                    <el-date-picker
+                                                            v-model="formData.birthday"
+                                                            type="date"
+                                                            placeholder="选择日期时间">
+                                                    </el-date-picker>
+                                                </div>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="性别">
+                                                <el-select v-model="formData.grender">
+                                                    <el-option label="不限" value="0"></el-option>
+                                                    <el-option label="男" value="1"></el-option>
+                                                    <el-option label="女" value="2"></el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="联系电话" prop="telephone">
+                                                <el-input v-model="formData.telephone"/>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item label="状态" prop="station">
+                                                <el-input v-model="formData.station"/>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="24">
+                                            <el-form-item label="备注" prop="remark">
+                                                <el-input v-model="formData.remark" type="textarea"/>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                </el-tab-pane>
+                                <el-tab-pane label="角色信息" name="second">
+                                    <div class="checkScrol">
+                                        <table class="datatable">
+                                            <thead>
+                                            <tr>
+                                                <th>选择</th>
+                                                <th>角色名称</th>
+                                                <th>角色关键字</th>
+                                                <th>角色描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="c in tableData">
+                                                <td>
+                                                    <input :id="c.id" v-model="roleIds" type="checkbox" :value="c.id">
+                                                </td>
+                                                <td><label :for="c.id">{{c.name}}</label></td>
+                                                <td><label :for="c.id">{{c.keyword}}</label></td>
+                                                <td><label :for="c.id">{{c.description}}</label></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="性别" prop="gender">
-                                    <el-input v-model="formData.gender"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="联系电话" prop="telephone">
-                                    <el-input v-model="formData.telephone"/>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="状态" prop="station">
-                                    <el-input v-model="formData.station"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="备注" prop="remark">
-                                    <el-input v-model="formData.remark" type="textarea"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-
-
+                                </el-tab-pane>
+                            </el-tabs>
+                        </template>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
                         <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -135,64 +193,95 @@
 
             <!-- 编辑标签弹层 -->
             <div class="add-form">
-                <el-dialog title="编辑检查项" :visible.sync="dialogFormVisible4Edit">
+                <el-dialog title="编辑用户信息" :visible.sync="dialogFormVisible4Edit">
                     <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right"
                              label-width="100px">
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="用户名" prop="username">
-                                    <el-input v-model="formData.username"/>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="密码" prop="password">
-                                    <el-input v-model="formData.password"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="生日" prop="gender">
-                                    <div class="block">
-                                        <span class="demonstration"></span>
-                                        <el-date-picker
-                                                v-model="formData.birthday"
-                                                type="date"
-                                                placeholder="选择日期时间">
-                                        </el-date-picker>
+                        <template>
+                            <el-tabs v-model="activeName" type="card">
+                                <el-tab-pane label="基本信息" name="first">
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="用户名" prop="username">
+                                                <el-input v-model="formData.username"/>
+                                            </el-form-item>
+                                        </el-col>
+                                        <!-- <el-col :span="12">
+                                             <el-form-item label="密码" prop="password">
+                                                 <el-input v-model="formData.password"/>
+                                             </el-form-item>
+                                         </el-col>-->
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="生日" prop="gender">
+                                                <div class="block">
+                                                    <span class="demonstration"></span>
+                                                    <el-date-picker
+                                                            v-model="formData.birthday"
+                                                            type="date"
+                                                            placeholder="选择日期时间">
+                                                    </el-date-picker>
+                                                </div>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="适用性别">
+                                                <el-select v-model="formData.gender">
+                                                    <el-option label="不限" value="0"></el-option>
+                                                    <el-option label="男" value="1"></el-option>
+                                                    <el-option label="女" value="2"></el-option>
+                                                </el-select>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="12">
+                                            <el-form-item label="联系电话" prop="telephone">
+                                                <el-input v-model="formData.telephone"/>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="12">
+                                            <el-form-item label="状态" prop="station">
+                                                <el-input v-model="formData.station"/>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="24">
+                                            <el-form-item label="备注" prop="remark">
+                                                <el-input v-model="formData.remark" type="textarea"/>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                </el-tab-pane>
+                                <el-tab-pane label="角色信息" name="second">
+                                    <div class="checkScrol">
+                                        <table class="datatable">
+                                            <thead>
+                                            <tr>
+                                                <th>选择</th>
+                                                <th>角色名称</th>
+                                                <th>角色关键字</th>
+                                                <th>角色描述</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr v-for="c in tableData">
+                                                <td>
+                                                    <input :id="c.id" v-model="roleIds" type="checkbox" :value="c.id">
+                                                </td>
+                                                <td><label :for="c.id">{{c.name}}</label></td>
+                                                <td><label :for="c.id">{{c.keyword}}</label></td>
+                                                <td><label :for="c.id">{{c.description}}</label></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="性别" prop="gender">
-                                    <el-input v-model="formData.gender"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="12">
-                                <el-form-item label="联系电话" prop="telephone">
-                                    <el-input v-model="formData.telephone"/>
-                                </el-form-item>
-                            </el-col>
-                            <el-col :span="12">
-                                <el-form-item label="状态" prop="station">
-                                    <el-input v-model="formData.station"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-
-                        <el-row>
-                            <el-col :span="24">
-                                <el-form-item label="备注" prop="remark">
-                                    <el-input v-model="formData.remark" type="textarea"/>
-                                </el-form-item>
-                            </el-col>
-                        </el-row>
-
+                                </el-tab-pane>
+                            </el-tabs>
+                        </template>
                     </el-form>
                     <div slot="footer" class="dialog-footer">
                         <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
@@ -220,7 +309,10 @@
                 queryString: null//查询条件
             },
             dataList: [],//当前页要展示的分页列表数据
+            tableData: [],//列表数据
             formData: {},//表单数据
+            roleIds: [],//新增和编辑表单中检查项对应的复选框，基于双向绑定可以进行回显和数据提交
+            activeName: 'first',//添加/编辑窗口Tab标签名称
             dialogFormVisible: false,//增加表单是否可见
             dialogFormVisible4Edit: false,//编辑表单是否可见
             rules: {//校验规则
@@ -240,65 +332,48 @@
 
                 } else {
                     this.$message.error('未知错误');
-
                 }
             },
-
             //编辑
             handleEdit() {
                 //dataEditForm
                 this.$refs['dataEditForm'].validate((valid) => {
                     if (valid) {
-                        axios.post('/checkItem/update.do',
-                            this.formData
-                        ).then(res => {
+                        //1 隐藏窗口
+                        this.dialogFormVisible4Edit = false;
+                        //2 保存检查组信息
+                        axios.post("/user/editUser.do?ids=" + this.roleIds, this.formData).then(res => {
+                            //提示信息
+                            this.$message({
+                                message: res.data.message,
+                                type: res.data.flag ? 'success' : 'error'
+                            });
+                            //3 刷新页面展示
                             if (res.data.flag) {
-                                this.$message({
-                                    message: res.data.message,
-                                    type: 'success'
-                                });
-                            } else {
-                                this.$message.error(res.data.message)
+                                this.findPage();
                             }
-                        }).finally(() => {
-                            this.dialogFormVisible4Edit = false;
-                            this.findPage();
-                        }).catch((r) => {
-                            this.showMessage(r);
                         })
                     } else {
-                        this.$message.error("表单提交信息有误");
+                        this.$message.error("表单提交格式错误");
                         return false;
                     }
                 });
             },
             //添加
             handleAdd() {
-                this.$refs['dataAddForm'].validate((valid) => {
-                    if (valid) {
-                        axios.post('/checkItem/save.do',
-                            this.formData
-                        ).then(res => {
-                            if (res.data.flag) {
-                                this.$message({
-                                    message: res.data.message,
-                                    type: 'success'
-                                });
-                            } else {
-                                this.$message.error(res.data.message)
-                            }
-                        }).finally(() => {
-                            this.dialogFormVisible = false;
-                            this.findPage();
-                        }).catch((r) => {
-                            this.showMessage(r);
-                        })
-                    } else {
-                        this.$message.error("表单提交信息有误");
-                        return false;
-                    }
-                });
-
+                //1 隐藏弹窗
+                this.dialogFormVisible = false;
+                //2 向后台发送异步请求 地址:/checkgroup/addSetmeal.do 参数:this.formData和this.checkgroupIds
+                axios.post("/user/addUser.do?roleIds=" + this.roleIds, this.formData).then(res => {
+                    //3 响应保存是否成功
+                    this.$message({
+                        message: res.data.message,
+                        type: res.data.flag ? 'success' : 'error'
+                    });
+                }).finally(() => {
+                    //4 刷新当前页面
+                    this.findPage();
+                })
             },
             //按条件查询
             findPageByString() {
@@ -312,7 +387,7 @@
                     pageSize: this.pagination.pageSize,
                     queryString: this.pagination.queryString
                 };
-                axios.post('/menu/findList.do', param).then(res => {
+                axios.post('/user/findUser2Page.do', param).then(res => {
                     var flag = res.data.flag;
                     var total = res.data.data.total;
                     var rows = res.data.data.rows;
@@ -326,28 +401,62 @@
             },
             // 重置表单
             resetForm() {
-                this.formData = {}
+                this.formData = {};
+                this.activeName = 'first';
+                this.tableData = [];
+                this.roleIds = [];
             },
             // 弹出添加窗口
             handleCreate() {
                 this.resetForm();
-                this.dialogFormVisible = true
+                this.dialogFormVisible = true;
+                //发送异步请求获取所有角色信息并展示
+                axios.get("/role/findAllRole.do").then(res => {
+                    this.tableData = res.data.data;
+                    this.$message({
+                        message: res.data.message,
+                        type: res.data.flag ? 'success' : 'error'
+                    });
+                })
             },
             // 弹出编辑窗口
             handleUpdate(row) {
-                axios.post('/checkItem/findById.do?id=' + row.id).then(res => {
-                    var flag = res.data.flag;
-                    if (flag) {
-                        this.dialogFormVisible4Edit = true;
+                this.resetForm();
+                //1 弹出编辑窗口
+                this.dialogFormVisible4Edit = true;
+                //2 根据id 发送异步请求进行用户的数据查询回显
+                axios.get("/user/findUserById.do?id=" + row.id).then(res => {
+                    this.$message({
+                        message: res.data.message,
+                        type: res.data.flag ? "success" : "error"
+                    });
+                    if (res.data.flag) {
+                        //3 查询回显
                         this.formData = res.data.data;
-                    } else {
-                        this.$message.error("获取数据失败，请刷新当前页面");
+                        this.$message({
+                            message: res.data.message,
+                            type: res.data.flag ? "success" : "error"
+                        });
+                        //4 发送异步请求 获取所有角色信息
+                        axios.get("/role/findAllRole.do").then(res => {
+                            this.$message({
+                                message: res.data.message,
+                                type: res.data.flag ? "success" : "error"
+                            });
+                            if (res.data.flag) {
+                                //5 展示所有角色数据
+                                this.tableData = res.data.data;
+                                //6 发送异步请求获取角色勾选状态
+                                axios.get("/user/findRoleIdsByUserId.do?uid=" + row.id).then(res => {
+                                    //7 将查询到的关联检查项进行赋值展示
+                                    this.roleIds = res.data.data;
+                                })
+                            } else {
+                                this.$message.error(res.data.message);
+                            }
+                        })
                     }
-                }).catch((r) => {
-                    this.showMessage(r);
-                });
-
-
+                })
             },
             //切换页码
             handleCurrentChange(currentPage) {
@@ -356,36 +465,24 @@
             },
             // 删除
             handleDelete(row) {
-                this.$confirm('此操作将永久删除该检查项, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    axios.post('/checkItem/deleteById.do?id=' + row.id).then(res => {
-                        var flag = res.data.flag;
-                        var message = res.data.message;
-                        if (flag) {
-                            this.$message({
-                                type: 'success',
-                                message: message
-                            });
-                            // this.findPage();
-                        } else {
-                            this.$message({
-                                type: 'error',
-                                message: message
-                            });
+                //弹出确认框 防止用户误操作
+                this.$confirm("确认删除当前选中用户吗？", "提示", {type: 'warning'}).then(() => {
+                    //点击确认执行此处代码
+                    //发送异步请求删除检查组
+                    axios.post("/user/deleteUserById.do?userId=" + row.id).then(res => {
+                        //提示信息
+                        this.$message({
+                            message: res.data.message,
+                            type: res.data.flag ? 'success' : 'error'
+                        });
+                        //3 刷新页面展示
+                        if (res.data.flag) {
+                            this.findPage();
                         }
-                        this.findPage();
-                    }).catch((r) => {
-                        this.showMessage(r)
                     })
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+                    this.$message.info("已取消删除操作")
+                })
             }
         }
     })

@@ -99,4 +99,10 @@ public class RoleServiceImpl implements RoleService {
         setRoleAndPermission(roleId, pIds);
         roleDao.update(role);
     }
+
+    //查询所有角色信息
+    @Override
+    public List<Role> findAllRole() {
+        return roleDao.findAllRole();
+    }
 }

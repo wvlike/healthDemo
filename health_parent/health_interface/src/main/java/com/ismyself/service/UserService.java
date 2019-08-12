@@ -1,5 +1,6 @@
 package com.ismyself.service;
 
+import com.ismyself.entity.Result;
 import com.ismyself.pojo.Menu;
 import com.ismyself.pojo.User;
 
@@ -16,4 +17,16 @@ public interface UserService {
     User findUserByUname(String username);
 
     List<Menu> findUserMenuByUsername(String username);
+
+    List<Integer> findRoleIdsByUserId(Integer uid);
+
+    User findUserById(Integer id);
+
+    void addUser(List<Integer> roleIds, User user);
+
+    Result findUser2Page(Integer currentPage, Integer pageSize, String queryString);
+
+    void deleteUserById(Integer userId);
+
+    void editUser(List<Integer> ids, User user);
 }

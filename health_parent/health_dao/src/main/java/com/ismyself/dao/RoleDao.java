@@ -3,6 +3,7 @@ package com.ismyself.dao;
 import com.github.pagehelper.Page;
 import com.ismyself.pojo.Role;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,4 +34,6 @@ public interface RoleDao {
     Role findById(Integer id);
 
     void update(Role role);
+
+    List<Role> findAllRole();
 }

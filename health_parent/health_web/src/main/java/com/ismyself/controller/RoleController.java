@@ -7,10 +7,7 @@ import com.ismyself.entity.QueryPageBean;
 import com.ismyself.entity.Result;
 import com.ismyself.pojo.Role;
 import com.ismyself.service.RoleService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -91,4 +88,21 @@ public class RoleController {
             return new Result(false, MessageConstant.EDIT_ROLE_FAIL);
         }
     }
+
+    //查询所有角色
+    @RequestMapping(value = "/findAllRole", method = RequestMethod.GET)
+    public Result findAllRole(){
+        try {
+            List<Role> roleList = roleService.findAllRole();
+            return new Result(true,MessageConstant.QUERY_ROLE_SUCCESS,roleList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.QUERY_ROLE_FAIL);
+        }
+
+    }
+
+
+
+
 }

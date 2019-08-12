@@ -15,6 +15,11 @@
         </if>
     </select>
 
+    <!--findAllRole-->
+    <select id="findAllRole" resultType="Role">
+        SELECT * FROM t_role
+    </select>
+
     <!--    void save(Role role);-->
     <insert id="save" parameterType="Role" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
         insert into t_role (name, keyword, description) values (#{name},#{keyword},#{description})

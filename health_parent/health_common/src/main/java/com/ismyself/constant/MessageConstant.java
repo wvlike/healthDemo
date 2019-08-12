@@ -8,6 +8,7 @@ package com.ismyself.constant;
  * @description：
  */
 public class MessageConstant {
+
     public static final String DELETE_CHECKITEM_FAIL = "删除检查项失败";
     public static final String DELETE_CHECKITEM_SUCCESS = "删除检查项成功";
     public static final String DELETE_CHECKITEM_EXIST = "当前检查项被引用，不能删除";
@@ -63,9 +64,11 @@ public class MessageConstant {
     public static final String HAS_ORDERED = "已经完成预约，不能重复预约";
     public static final String ORDER_SUCCESS = "预约成功";
     public static final String GET_USERNAME_SUCCESS = "获取当前登录用户名称成功";
+    public static final String GET_USERLIST_SUCCESS = "获取用户列表成功";
     public static final String GET_USERNAME_FAIL = "获取当前登录用户名称失败";
     public static final String GET_MENU_SUCCESS = "获取当前登录用户菜单成功";
     public static final String GET_MENU_FAIL = "获取当前登录用户菜单失败";
+    public static final String GET_USERLIST_FAIL = "获取用户列表失败";
     public static final String GET_MEMBER_NUMBER_REPORT_SUCCESS = "获取会员统计数据成功";
     public static final String GET_MEMBER_NUMBER_REPORT_FAIL = "获取会员统计数据失败";
     public static final String GET_SETMEAL_COUNT_REPORT_SUCCESS = "获取套餐统计数据成功";
@@ -105,10 +108,24 @@ public class MessageConstant {
     public static final String DELETE_ROLE_SUCCESS = "删除角色成功";
     public static final String DELETE_ROLE_FAIL = "删除角色失败";
     public static final String QUERY_ROLE_SUCCESS = "查询角色成功";
+    public static final String QUERY_ROLEIDS_SUCCESS = "查询角色ID列表成功";
+    public static final String QUERY_ROLEIDS_FAIL = "查询角色ID列表成功";
     public static final String QUERY_ROLE_FAIL = "查询角色失败";
     public static final String EDIT_ROLE_SUCCESS = "编辑角色成功";
     public static final String EDIT_ROLE_FAIL = "编辑角色失败";
 
+    public static final String ADD_USER_SUCCESS = "添加用户成功";
+    public static final String ADD_USER_FAIL = "添加用户失败";
+    public static final String DELETE_USER_SUCCESS = "删除用户成功";
+    public static final String DELETE_USER_FAIL = "删除用户失败";
+    public static final String GET_USERINFO_SUCCESS = "获取用户信息失败";
+    public static final String GET_USERINFO_FAIL = "获取用户信息失败";
+    public static final String EDIT_USERINFO_SUCCESS = "修改用户信息成功";
+    public static final String EDIT_USERINFO_FAIL = "修改用户信息失败";
+
 
 }
+
+
+
 
