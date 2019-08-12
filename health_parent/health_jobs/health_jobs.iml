@@ -23,6 +23,12 @@
         <fileset id="fileset2" name="ApplicationContext Redis" removed="false">
           <file>file://$MODULE_DIR$/src/main/resources/applicationContext-redis.xml</file>
         </fileset>
+        <fileset id="fileset3" name="ApplicationContext Spring" removed="false">
+          <file>file://$MODULE_DIR$/src/main/resources/applicationContext-spring.xml</file>
+        </fileset>
+        <fileset id="fileset4" name="ApplicationContext Springmvc" removed="false">
+          <file>file://$MODULE_DIR$/src/main/resources/applicationContext-springmvc.xml</file>
+        </fileset>
       </configuration>
     </facet>
   </component>

@@ -59,11 +59,11 @@
                     <el-submenu v-for="menu in menuList" :index="menu.path">
                         <template slot="title">
                             <i class="fa" :class="menu.icon"></i>
-                            {{menu.title}}
+                            {{menu.name}}
                         </template>
                         <template v-for="child in menu.children">
                             <el-menu-item :index="child.path">
-                                <a :href="child.linkUrl" target="right">{{child.title}}</a>
+                                <a :href="child.linkUrl" target="right">{{child.name}}</a>
                             </el-menu-item>
                         </template>
                     </el-submenu>
@@ -236,19 +236,32 @@
             ]
         },
         created() {
-            axios.get('/user/getUsername.do').then(res => {
-                this.username = res.data.data.username;
-            })
+            this.showUsername();
+
         },
         methods: {
             exit() {
                 location.href = '/logout.do'
             },
-            showMenu(){
-                axios.get('/user/getUsername.do').then(res=>{
-
+            showUsername() {
+                axios.get('/user/getUsername.do').then(res => {
+                    if (res.data.flag){
+                        this.username = res.data.data.username;
+                        this.showMenu();
+                    }
                 })
-
+            },
+            showMenu() {
+                axios.get('/user/findUserMenuByUsername.do?username=' + this.username).then(res => {
+                    console.info(JSON.stringify(res.data));
+                    this.$message({
+                        message: res.data.message,
+                        type: res.data.flag ? 'success' : 'error'
+                    });
+                    if (res.data.flag) {
+                        this.menuList = res.data.data
+                    }
+                })
             }
         }
     });

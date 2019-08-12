@@ -1,5 +1,7 @@
 package com.ismyself.jobs;
 
+
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.ismyself.Utils.QiniuUtils;
 import com.ismyself.constant.RedisConstant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +17,7 @@ import java.util.Set;
  * @create 2019-07-31  15:54
  * @description：
  */
-
+@Component
 public class ClearImage {
 
     @Autowired

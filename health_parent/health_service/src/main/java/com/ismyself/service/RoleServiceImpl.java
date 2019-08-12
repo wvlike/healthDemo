@@ -50,7 +50,6 @@ public class RoleServiceImpl implements RoleService {
     public void save(Role role, List<Integer> pIds, List<Integer> mIds) {
         roleDao.save(role);
         Integer roleId = role.getId();
-        System.out.println(roleId + "*****************************************************");
         setRoleAndMenu(roleId, mIds);
         setRoleAndPermission(roleId, pIds);
     }

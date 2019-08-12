@@ -4,6 +4,7 @@ import com.ismyself.pojo.Member;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * package com.ismyself.service;
@@ -18,6 +19,5 @@ public interface MemberService {
     void saveMember(Member member);
 
     List<Integer> findMemberCountByMonth(List<String> list);
-
 
 }

@@ -1,6 +1,7 @@
 package com.ismyself.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.google.gson.Gson;
 import com.ismyself.Utils.QiniuUtils;
 import com.ismyself.constant.MessageConstant;
 import com.ismyself.constant.RedisConstant;
@@ -48,6 +49,7 @@ public class SetmealController {
     public Result save(@RequestBody Setmeal setmeal, @RequestParam List<Integer> ids) {
         try {
             setmealService.save(setmeal, ids);
+            updateRedis();
             return new Result(true, MessageConstant.ADD_SETMEAL_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,7 +97,6 @@ public class SetmealController {
     public Result findList(QueryPageBean queryPageBean) {
         try {
             PageResult pageResult = setmealService.findMealList(queryPageBean);
-
             return new Result(true, MessageConstant.QUERY_SETMEALLIST_SUCCESS, pageResult);
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,6 +111,7 @@ public class SetmealController {
         try {
             String picImg = setmealService.deleteById(id);
             delPic2Redis(picImg);
+            updateRedis();
             return new Result(true, MessageConstant.DELETE_SETMEAL_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,6 +151,7 @@ public class SetmealController {
     public Result update(@RequestBody Setmeal setmeal,@RequestParam List<Integer> ids) {
         try {
             setmealService.update(setmeal,ids);
+            updateRedis();
             return new Result(true, MessageConstant.EDIT_SETMEAL_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -156,4 +159,8 @@ public class SetmealController {
         }
     }
 
+    private void updateRedis(){
+        List<Setmeal> setmealList = setmealService.findSetmealList();
+        jedisPool.getResource().set(RedisConstant.SETMEAL_List_DB_RESOURCES,new Gson().toJson(setmealList));
+    }
 }

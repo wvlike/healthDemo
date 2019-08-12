@@ -2,8 +2,10 @@ package com.ismyself.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.ismyself.Utils.DateUtils;
+import com.ismyself.Utils.StringUtils;
 import com.ismyself.constant.MessageConstant;
 import com.ismyself.entity.Result;
+import com.ismyself.pojo.Menu;
 import com.ismyself.pojo.Setmeal;
 import com.ismyself.service.MemberService;
 import com.ismyself.service.OrderService;
@@ -50,22 +52,27 @@ public class ReportController {
     @RequestMapping("/getMemberReport")
     public Result getMemberReport() {
         try {
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MONTH, -12);
-            List<String> list = new ArrayList<>();
-            for (int i = 0; i < 12; i++) {
-                calendar.add(Calendar.MONTH, 1);
-                list.add(new SimpleDateFormat("yyyy.MM").format(calendar.getTime()));
-            }
-            Map<String, Object> map = new HashMap<>();
-            map.put("months", list);
-            List<Integer> memberCount = memberService.findMemberCountByMonth(list);
-            map.put("memberCount", memberCount);
+            Map<String, Object> map = getLastYearMap();
             return new Result(true, MessageConstant.GET_MEMBER_NUMBER_REPORT_SUCCESS, map);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result(false, MessageConstant.GET_MEMBER_NUMBER_REPORT_FAIL);
         }
+    }
+
+    private Map<String, Object> getLastYearMap() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -12);
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 12; i++) {
+            calendar.add(Calendar.MONTH, 1);
+            list.add(new SimpleDateFormat("yyyy.MM").format(calendar.getTime()));
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("months", list);
+        List<Integer> memberCount = memberService.findMemberCountByMonth(list);
+        map.put("memberCount", memberCount);
+        return map;
     }
 
     //getSetmealReport
@@ -160,7 +167,7 @@ public class ReportController {
                 row.getCell(5).setCellValue(setmealCount);
                 row.getCell(6).setCellValue(proportion.doubleValue());
                 row.getCell(7).setCellValue(remark);
-                rowCount ++;
+                rowCount++;
             }
 
             ServletOutputStream os = response.getOutputStream();
@@ -173,8 +180,61 @@ public class ReportController {
             return null;
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,MessageConstant.GET_BUSINESS_REPORT_FAIL,null);
+            return new Result(false, MessageConstant.GET_BUSINESS_REPORT_FAIL, null);
         }
     }
 
+    @RequestMapping("/getOurselfTime")
+    public Result getOurselfTime(String time) {
+        if (!StringUtils.isEmpty(time)) {
+            System.out.println(time);
+            try {
+                String firstTime = time.split(",")[0];
+                String lastTime = time.split(",")[1];
+                List<String> list = DateUtils.getMonthBetween(firstTime, lastTime, "yyyy.MM");
+                Map<String, Object> map = new HashMap<>();
+                map.put("months", list);
+                List<Integer> memberCount = memberService.findMemberCountByMonth(list);
+                map.put("memberCount", memberCount);
+                return new Result(true, MessageConstant.GET_SETMEAL_COUNT_REPORT_SUCCESS, map);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new Result(false, MessageConstant.GET_SETMEAL_COUNT_REPORT_FAIL);
+            }
+        } else {
+            try {
+                Map<String, Object> map = getLastYearMap();
+                return new Result(true, MessageConstant.GET_MEMBER_NUMBER_REPORT_SUCCESS, map);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new Result(false, MessageConstant.GET_MEMBER_NUMBER_REPORT_FAIL);
+            }
+        }
+    }
+
+
+    //getSexReport
+    @RequestMapping("/getSexReport")
+    public Result getSexReport() {
+        try {
+            Map<String,Object> map = reportService.findSexReportMap();
+            return new Result(true,MessageConstant.GET_SEX_COUNT_REPORT_SUCCESS,map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.GET_SEX_COUNT_REPORT_FAIL);
+        }
+    }
+
+
+    //getAgeReport
+    @RequestMapping("/getAgeReport")
+    public Result getAgeReport() {
+        try {
+            Map<String,Object> map = reportService.findAgeReportMap();
+            return new Result(true,MessageConstant.GET_SEX_COUNT_REPORT_SUCCESS,map);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.GET_SEX_COUNT_REPORT_FAIL);
+        }
+    }
 }

@@ -9,7 +9,7 @@ package com.ismyself.Utils;
  */
 public class StringUtils {
 
-    public static boolean isEmpty(String name){
-        return name == null || "".equals(name);
+    public static boolean isEmpty(String name) {
+        return name == null || "".equals(name) || "null".equals(name);
     }
 }

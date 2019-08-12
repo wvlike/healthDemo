@@ -18,4 +18,6 @@ public interface OrderSettingService {
     List<Map<String, Object>> getOrderSettingByMonth(String date);
 
     void addOrderSetting(OrderSetting orderSetting);
+
+    void deleteBeforeDate(String date);
 }

@@ -25,4 +25,5 @@ public interface OrderSettingDao {
 
     OrderSetting findOrderSettingByDate(Date date);
 
+    void deleteBeforeDate(String date);
 }

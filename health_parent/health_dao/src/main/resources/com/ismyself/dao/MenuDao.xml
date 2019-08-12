@@ -81,4 +81,29 @@
          select menu_id from t_role_menu where role_id = #{id}
     </select>
 
+    <!--findMenuByUsername-->
+    <select id="findMenuByUsername" parameterType="String" resultType="Menu">
+         SELECT *
+        FROM t_menu
+        WHERE level = 1
+            AND id IN (
+                SELECT menu_id
+                FROM t_role_menu
+                WHERE role_id = (
+                    SELECT role_id
+                    FROM t_user_role
+                    WHERE user_id = (
+                        SELECT id
+                        FROM t_user
+                        WHERE username = #{value}
+                    )
+                )
+            )
+        ORDER BY priority ASC
+    </select>
+
+    <!--findListByParentId-->
+    <select id="findListByParentId" parameterType="int" resultType="Menu">
+        select * from t_menu where parentMenuId = #{id} order by priority asc
+    </select>
 </mapper>

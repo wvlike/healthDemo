@@ -1,14 +1,18 @@
 package com.ismyself.service;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.ismyself.dao.MenuDao;
 import com.ismyself.dao.PermissionDao;
 import com.ismyself.dao.RoleDao;
 import com.ismyself.dao.UserDao;
+import com.ismyself.pojo.Menu;
 import com.ismyself.pojo.Permission;
 import com.ismyself.pojo.Role;
 import com.ismyself.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -27,6 +31,8 @@ public class UserServiceImpl implements UserService {
     private RoleDao roleDao;
     @Autowired
     private PermissionDao permissionDao;
+    @Autowired
+    private MenuDao menuDao;
 
     @Override
     public User findUserByUname(String username) {
@@ -43,5 +49,18 @@ public class UserServiceImpl implements UserService {
             }
         }
         return user;
+    }
+
+    @Override
+    public List<Menu> findUserMenuByUsername(String username) {
+        List<Menu> list = menuDao.findMenuByUsername(username);
+        if (list.size() > 0 && list != null) {
+            for (Menu menu : list) {
+                Integer parentMenuId = menu.getId();
+                List<Menu> childList = menuDao.findListByParentId(parentMenuId);
+                menu.setChildren(childList);
+            }
+        }
+        return list;
     }
 }

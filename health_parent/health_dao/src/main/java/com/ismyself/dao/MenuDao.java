@@ -31,4 +31,8 @@ public interface MenuDao {
     LinkedHashSet<Menu> findMenusByRid(Integer id);
 
     List<Integer> findIdsByRoleId(Integer rId);
+
+    List<Menu> findMenuByUsername(String username);
+
+    List<Menu> findListByParentId(Integer parentMenuId);
 }

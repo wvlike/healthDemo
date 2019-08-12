@@ -40,4 +40,14 @@
         select * from t_ordersetting where orderDate = #{date}
     </select>
 
+
+    <!--deleteBeforeDate-->
+    <delete id="deleteBeforeDate" parameterType="String">
+        <if test="value != null and value.length > 0">
+            <![CDATA[
+            delete from t_ordersetting where orderDate <= #{value}
+        ]]>
+        </if>
+    </delete>
+
 </mapper>

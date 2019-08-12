@@ -35,22 +35,39 @@
     <!--findThisWeekNewMember-->
     <select id="findThisWeekNewMember" parameterType="String" resultType="int">
         <![CDATA[
-
-                      select count(id) from t_member where regTime >= #{value}
-
+     select count(id) from t_member where regTime >= #{value}
         ]]>
     </select>
 
     <!--findThisMonthNewMember-->
     <select id="findThisMonthNewMember" parameterType="String" resultType="int">
       <![CDATA[
-
-                      select count(id) from t_member where regTime >= #{value}
-
+           select count(id) from t_member where regTime >= #{value}
         ]]>
     </select>
 
+    <!--findCountBySexId-->
+    <select id="findCountBySexId" parameterType="String" resultType="int">
+        select count(sex) from t_member where sex = #{value}
+    </select>
 
 
-
+    <!--      queryMap.put("minBirthDay", minBirthDay);
+                queryMap.put("maxBirthDay", maxBirthDay);-->
+    <!--findAgeCountByMap-->
+    <select id="findAgeCountByMap" parameterType="map" resultType="int">
+        select count(id) from t_member
+        <where>
+            <if test=" minBirthDay != null and minBirthDay.length > 0">
+                <![CDATA[
+                and birthday <= #{minBirthDay}
+                ]]>
+            </if>
+            <if test=" maxBirthDay != null and maxBirthDay.length > 0">
+                <![CDATA[
+                and birthday >= #{maxBirthDay}
+                ]]>
+            </if>
+        </where>
+    </select>
 </mapper>

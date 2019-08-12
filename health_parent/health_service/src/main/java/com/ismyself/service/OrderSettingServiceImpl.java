@@ -64,6 +64,12 @@ public class OrderSettingServiceImpl implements OrderSettingService {
         saveOrUpdateOrderSetting(orderSetting);
     }
 
+    @Override
+    @Transactional
+    public void deleteBeforeDate(String date) {
+        orderSettingDao.deleteBeforeDate(date);
+    }
+
     private Map<String, String> getCurrentMonthFristAndLast(String date) {
         Map<String, String> map = new HashMap<>();
         map.put("fristDate", date + "-1");

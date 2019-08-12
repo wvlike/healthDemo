@@ -27,4 +27,8 @@ public interface MemberDao {
     Integer findThisWeekNewMember(String thisWeekMonday);
 
     Integer findThisMonthNewMember(String thisMonthFirstDay);
+
+    Integer findCountBySexId(String sexId);
+
+    Integer findAgeCountByMap(Map<String, String> queryMap);
 }

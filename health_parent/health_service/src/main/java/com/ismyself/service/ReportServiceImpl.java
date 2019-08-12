@@ -6,10 +6,7 @@ import com.ismyself.dao.MemberDao;
 import com.ismyself.dao.OrderDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * package com.ismyself.service;
@@ -30,7 +27,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public Map<String, Object> findBusinessReportMap() throws Exception {
         Map<String, Object> map = new HashMap<>();
-        map.put("reportDate",DateUtils.parseDate2String(new Date()));
+        map.put("reportDate", DateUtils.parseDate2String(new Date()));
         //新增会员数
         Integer todayMember = memberDao.findTodayMemberNum(DateUtils.parseDate2String(new Date()));
         map.put("todayNewMember", todayMember);
@@ -69,5 +66,74 @@ public class ReportServiceImpl implements ReportService {
 
 
         return map;
+    }
+
+    @Override
+    public Map<String, Object> findSexReportMap() {
+        Map<String, Object> resMap = new HashMap<>();
+        List<String> sexList = new ArrayList<>();
+        sexList.add("男");
+        sexList.add("女");
+        resMap.put("sexNames", sexList);
+        List<Map> sexPercentList = new ArrayList<>();
+        for (int i = 0; i < sexList.size(); i++) {
+            Map<String, Object> sexPercentMap = new HashMap<>();
+            String sexId;
+            if ("男".equals(sexList.get(i))) {
+                sexId = "1";
+            } else {
+                sexId = "2";
+            }
+            sexPercentMap.put("name", sexList.get(i));
+            Integer sexCount = memberDao.findCountBySexId(sexId);
+            sexPercentMap.put("value", sexCount);
+            sexPercentList.add(sexPercentMap);
+        }
+        resMap.put("sexCount", sexPercentList);
+        return resMap;
+    }
+
+    //按照会员的年龄段（可以指定几个年龄段，例如0-18、18-30、30-45、45以上）来展示各个年龄段的占比
+    @Override
+    public Map<String, Object> findAgeReportMap() throws Exception {
+        Map<String, Object> resMap = new HashMap<>();
+        List<String> ageList = new ArrayList<>();
+        ageList.add("0-18");
+        ageList.add("18-30");
+        ageList.add("30-45");
+        ageList.add("45以上");
+        resMap.put("ageNames", ageList);
+        List<Map> agePercentList = new ArrayList<>();
+        for (String ageString : ageList) {
+            Map<String, Object> map = new HashMap<>();
+            String minAge = null;
+            String maxAge = null;
+            if (ageString.contains("-")) {
+                minAge = ageString.split("-")[0];
+                maxAge = ageString.split("-")[1];
+            } else {
+                minAge = ageString.substring(0, 2);
+            }
+            String todayDate = DateUtils.parseDate2String(new Date());
+            Calendar calendar = Calendar.getInstance();
+            int thisYear = calendar.get(Calendar.YEAR);
+            String minBirthDay = String.valueOf(thisYear - Integer.parseInt(minAge)) + todayDate.substring(4);
+            String maxBirthDay = null;
+            if (maxAge != null) {
+                maxBirthDay = String.valueOf(thisYear - Integer.parseInt(maxAge)) + todayDate.substring(4);
+            }
+            Map<String, String> queryMap = new HashMap<>();
+            queryMap.put("minBirthDay", minBirthDay);
+            queryMap.put("maxBirthDay", maxBirthDay);
+
+
+            Integer count = memberDao.findAgeCountByMap(queryMap);
+            map.put("name", ageString);
+            map.put("value", count);
+            agePercentList.add(map);
+        }
+        System.out.println(agePercentList+"*********************************************************");
+        resMap.put("ageCount", agePercentList);
+        return resMap;
     }
 }
