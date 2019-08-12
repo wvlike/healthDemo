@@ -4,8 +4,10 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.ismyself.Utils.DateUtils;
 import com.ismyself.dao.MemberDao;
 import com.ismyself.dao.OrderDao;
+import com.ismyself.dao.ReportDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -23,7 +25,8 @@ public class ReportServiceImpl implements ReportService {
 
     @Autowired
     private OrderDao orderDao;
-
+    @Autowired
+    private ReportDao reportDao;
     @Override
     public Map<String, Object> findBusinessReportMap() throws Exception {
         Map<String, Object> map = new HashMap<>();
@@ -135,5 +138,57 @@ public class ReportServiceImpl implements ReportService {
         System.out.println(agePercentList+"*********************************************************");
         resMap.put("ageCount", agePercentList);
         return resMap;
+    }
+    /**
+     * 获取会员数量组成数据
+     * @return
+     */
+    @Override
+    public Map<String, Object> getMemberReportType() {
+        Map<String, Object> map = new HashMap<>();
+        //获取会员总数
+        Integer totalMember = memberDao.findTotalMember();
+        map.put("totalMember",totalMember);
+        List<Map<String, String>> sexList = reportDao.findsexNumber();
+        //获取会员组成的性别数据
+        Map<String, String> sexNumber= new HashMap<>();
+        for (Map<String, String> stringObjectMap : sexList) {
+            String sex = stringObjectMap.get("sex");
+            if (sex==null){
+                sexNumber.put("null",stringObjectMap.get("number"));
+            }else {
+                if (sex.equals("1")){
+                    sexNumber.put("man",stringObjectMap.get("number"));
+                }else {
+                    sexNumber.put("woman",stringObjectMap.get("number"));
+                }
+            }
+        }
+        map.put("sexNumber", sexNumber);
+        //获取会员组成的年龄数据
+        Map<String, Object> ageNumber = new HashMap<>();
+        Map<String, String> paramMap = new HashMap<>();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String Date_1 = format.format(DateUtils.getBeginDate(18));
+        String Date_2 = format.format(DateUtils.getBeginDate(30));
+        String Date_3 = format.format(DateUtils.getBeginDate(45));
+        paramMap.put("beginBithday",Date_1);
+        paramMap.put("endBithday",null);
+        Integer ageNumber_1 = reportDao.findageNumber(paramMap);
+        ageNumber.put("0-18", ageNumber_1);
+        paramMap.put("beginBithday",Date_2);
+        paramMap.put("endBithday",Date_1);
+        Integer ageNumber_2=reportDao.findageNumber(paramMap);
+        ageNumber.put("18-30", ageNumber_2);
+        paramMap.put("beginBithday",Date_3);
+        paramMap.put("endBithday",Date_2);
+        Integer ageNumber_3=reportDao.findageNumber(paramMap);
+        ageNumber.put("30-45", ageNumber_3);
+        paramMap.put("beginBithday",null);
+        paramMap.put("endBithday",Date_3);
+        Integer ageNumber_4=reportDao.findageNumber(paramMap);
+        ageNumber.put("45+", ageNumber_4);
+        map.put("ageNumber",ageNumber);
+        return map;
     }
 }

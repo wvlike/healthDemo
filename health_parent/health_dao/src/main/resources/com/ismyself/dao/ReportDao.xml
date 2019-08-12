@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ismyself.dao.ReportDao">
+    <!--按会员性别获取会员数量-->
+    <select id="findsexNumber" resultType="Map">
+        select sex,count(id) number from t_member group by sex
+    </select>
+    <!--根据年龄段查询会员数量-->
+    <select id="findageNumber" parameterType="map" resultType="integer">
+        select count(id) from t_member
+        <where>
+            <if test="beginBithday!=null">
+                birthday>=#{beginBithday}
+            </if>
+            <if test="endBithday!=null">
+                and birthday&lt;=#{endBithday}
+            </if>
+        </where>
+    </select>
+</mapper>

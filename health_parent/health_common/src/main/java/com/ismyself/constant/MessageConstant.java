@@ -122,6 +122,8 @@ public class MessageConstant {
     public static final String GET_USERINFO_FAIL = "获取用户信息失败";
     public static final String EDIT_USERINFO_SUCCESS = "修改用户信息成功";
     public static final String EDIT_USERINFO_FAIL = "修改用户信息失败";
+    public static final String GET_MEMBERTYPE_REPORT_FAIL = "查询会员组成数据失败";
+    public static final String GET_MEMBERTYPE_REPORT_SUCCESS = "查询会员组成数据成功";
 
 
 }

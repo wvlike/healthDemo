@@ -16,4 +16,9 @@ public interface ReportService {
     Map<String, Object> findSexReportMap();
 
     Map<String, Object> findAgeReportMap() throws Exception;
+    /**
+     * 获取会员数量组成数据
+     * @return
+     */
+    Map<String, Object> getMemberReportType();
 }

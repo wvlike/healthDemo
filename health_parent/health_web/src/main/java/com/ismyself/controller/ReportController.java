@@ -237,4 +237,20 @@ public class ReportController {
             return new Result(false,MessageConstant.GET_SEX_COUNT_REPORT_FAIL);
         }
     }
+    /**
+     * 获取会员数量组成数据
+     *
+     * @return
+     */
+    @RequestMapping("/getMemberReportType")
+    public Result getMemberReportType() {
+        Map<String, Object> map;
+        try {
+            map = reportService.getMemberReportType();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(true, MessageConstant.GET_MEMBERTYPE_REPORT_FAIL);
+        }
+        return new Result(true, MessageConstant.GET_MEMBERTYPE_REPORT_SUCCESS, map);
+    }
 }

@@ -309,4 +309,10 @@ public class DateUtils {
             e.printStackTrace();
         }
     }
+
+    public static Date getBeginDate(int age) {
+        Calendar instance = Calendar.getInstance();
+        instance.set(Calendar.YEAR,instance.get(Calendar.YEAR)-age);
+        return instance.getTime();
+    }
 }
